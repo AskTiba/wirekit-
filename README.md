@@ -76,6 +76,29 @@ MASK      = 11111111111111111111111111000000
 NETWORK   = 11000000101010000000000100000000
 ```
 
+### Quiz mode
+
+Practice with randomly generated problems — `wirekit` asks, you answer, and it scores you (showing the right answer when you miss):
+
+```console
+$ net --quiz
+wirekit quiz — answer each question, or type 'q' to quit.
+
+Q: What is the broadcast address of 10.20.30.40/27?
+> 10.20.30.63
+Correct!
+
+Q: How many usable hosts are in 192.168.4.0/26?
+> 60
+Not quite — 62
+
+Q: What is the network address of 172.16.9.130/25?
+> q
+
+Score: 1/2
+Keep practicing!
+```
+
 ### Output reference
 
 | Field | Meaning |
@@ -123,15 +146,20 @@ git clone https://github.com/AskTiba/wirekit-.git wirekit && cd wirekit
 python3 wirekit.py 192.168.1.26 /24
 ```
 
+### Run the test suite
+
+```bash
+python3 -m pytest
+```
+
 ### Submit a pull request
 
 Fork → create a branch → open a PR against `main`.
 
 ## Roadmap
 
-- `pytest` suite covering `/8`, `/24`, `/30`, `/31`, `/32`, and invalid input
-- `--quiz` mode to generate random subnetting problems and check your answers
 - Optional JSON output for scripting
+- More quiz question types
 
 ## License
 
