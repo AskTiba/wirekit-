@@ -4,8 +4,8 @@ set -e
 HERE=$(cd "$(dirname "$0")" && pwd)
 
 mkdir -p "$HOME/.local/bin"
-cp "$HERE/subnet_calc.py" "$HOME/.local/bin/subnet_calc"
-chmod +x "$HOME/.local/bin/subnet_calc"
+cp "$HERE/wirekit.py" "$HOME/.local/bin/wirekit"
+chmod +x "$HOME/.local/bin/wirekit"
 
 case "$(basename "${SHELL:-bash}")" in
   zsh) RC="$HOME/.zshrc" ;;
@@ -13,12 +13,12 @@ case "$(basename "${SHELL:-bash}")" in
 esac
 
 if ! grep -q 'alias net=' "$RC" 2>/dev/null; then
-  printf '\n# subnet calculator alias\nalias net="subnet_calc"\n' >> "$RC"
+  printf '\n# wirekit alias\nalias net="wirekit"\n' >> "$RC"
 fi
 
-if ! command -v subnet_calc >/dev/null 2>&1; then
+if ! command -v wirekit >/dev/null 2>&1; then
   printf '\nexport PATH="$HOME/.local/bin:$PATH"\n' >> "$RC"
   echo "Note: added ~/.local/bin to PATH in $RC"
 fi
 
-echo "Installed subnet_calc. Reload with: source $RC"
+echo "Installed wirekit. Reload with: source $RC"

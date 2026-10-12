@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""NetCalc: an ipcalc-style subnet calculator.
+"""wirekit: an ipcalc-style subnet calculator.
 
 Usage:
-    python3 subnet_calc.py 192.168.1.26 /24
-    python3 subnet_calc.py 192.168.1.26 24
-    python3 subnet_calc.py 192.168.1.26 255.255.255.0
-    python3 subnet_calc.py 192.168.1.26/24
-    python3 subnet_calc.py --bits 192.168.1.26 /26
+    python3 wirekit.py 192.168.1.26 /24
+    python3 wirekit.py 192.168.1.26 24
+    python3 wirekit.py 192.168.1.26 255.255.255.0
+    python3 wirekit.py 192.168.1.26/24
+    python3 wirekit.py --bits 192.168.1.26 /26
 """
 
 import argparse
@@ -76,7 +76,7 @@ def show_bits(net, ip):
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="subnet_calc.py",
+        prog="wirekit",
         description="Compute network, broadcast, host range and more from an IP and mask.",
     )
     parser.add_argument("ip", help="IPv4 address (e.g. 192.168.1.26)")

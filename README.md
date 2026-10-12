@@ -120,7 +120,7 @@ git clone https://github.com/AskTiba/wirekit-.git wirekit && cd wirekit
 ### Run it without installing
 
 ```bash
-python3 subnet_calc.py 192.168.1.26 /24
+python3 wirekit.py 192.168.1.26 /24
 ```
 
 ### Submit a pull request
