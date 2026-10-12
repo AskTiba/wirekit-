@@ -1,15 +1,15 @@
-# subnet-calc
+# wirekit
 
 An `ipcalc`-style subnet calculator that turns any IPv4 address and mask into the network, broadcast, host range, and more — in a single command.
 
 ## Description
 
-`subnet-calc` is a command-line tool that computes everything about an IPv4 subnet from one address and one mask. It accepts the mask as CIDR (`/24`), a bare prefix (`24`), or a dotted-decimal subnet mask (`255.255.255.0`), and it handles the awkward edge cases — `/31`, `/32`, and host addresses passed inside a larger network.
+`wirekit` is a command-line tool that computes everything about an IPv4 subnet from one address and one mask. It accepts the mask as CIDR (`/24`), a bare prefix (`24`), or a dotted-decimal subnet mask (`255.255.255.0`), and it handles the awkward edge cases — `/31`, `/32`, and host addresses passed inside a larger network.
 
 ## Show, Don't Tell
 
 <!-- TODO: optional hero screenshot of a terminal running `net` (dark theme). -->
-<!-- ![subnet-calc in the terminal](docs/hero.png) -->
+<!-- ![wirekit in the terminal](docs/hero.png) -->
 
 ```console
 $ net 172.30.197.206 /20
@@ -28,13 +28,13 @@ Next network = 172.30.208.0
 
 Subnetting is the kind of skill you only really learn by checking your work — do a problem by hand, then confirm you got the network, broadcast, and host range right. Existing calculators either force a strict CIDR-only syntax or give you a wall of numbers with no context.
 
-I built `subnet-calc` to be the answer key I kept reaching for: it takes the mask exactly the way you'd type it in the real world (from `ipconfig`, a router page, or a CIDR block), it reports exactly the values you're practicing, and its `--bits` mode shows the underlying **IP AND mask** operation so you can see *why* the network ID is what it is.
+I built `wirekit` to be the answer key I kept reaching for: it takes the mask exactly the way you'd type it in the real world (from `ipconfig`, a router page, or a CIDR block), it reports exactly the values you're practicing, and its `--bits` mode shows the underlying **IP AND mask** operation so you can see *why* the network ID is what it is.
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/AskTiba/subnet-calc.git
-cd subnet-calc
+git clone https://github.com/AskTiba/wirekit-.git wirekit
+cd wirekit
 chmod +x install.sh
 ./install.sh
 source ~/.bashrc        # or: source ~/.zshrc
@@ -114,7 +114,7 @@ source ~/.bashrc
 ### Clone the repo
 
 ```bash
-git clone https://github.com/AskTiba/subnet-calc.git && cd subnet-calc
+git clone https://github.com/AskTiba/wirekit-.git wirekit && cd wirekit
 ```
 
 ### Run it without installing
