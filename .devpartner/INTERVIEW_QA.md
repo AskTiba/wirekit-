@@ -116,6 +116,18 @@
 
 ---
 
+### STORY-004 — MIT LICENSE + README CI badge — 2026-10-13
+
+**Q (T1):** Why MIT over Apache-2.0 or GPL for a portfolio CLI?
+
+**A:** The audience is portfolio reviewers and casual tinkerers — MIT's one condition (keep the copyright notice) is the lowest friction possible, which is the point of a permissive license on a small tool. Apache-2.0 adds a patent grant — valuable for companies shipping products, overkill for a 200-line calculator. GPL would *restrict* reuse, directly opposing the README's goal ("if you want others to reuse this"). Copyright holder sourced from `git config user.name` — not guessed.
+
+**Q (T1):** Why put the *full local gate* commands in the README's Contributing section?
+
+**A:** The README's job is to make contribution frictionless and honest — telling people "run `pytest`" when the real gate is `pytest && ruff check && ruff format --check` guarantees their first PR fails CI on style alone. The line "the same three commands run in CI" also communicates engineering discipline in one sentence: local/parity is enforced, not aspirational (ci-partner §1.1 mirror). Badge at the top gives the instant health signal; the gate commands make the signal maintainable.
+
+---
+
 ## Project Scan (Post-Hoc) — 2026-10-13
 
 ### D1. System Design & Architecture

@@ -1,5 +1,7 @@
 # wirekit
 
+[![wirekit CI](https://github.com/AskTiba/wirekit-/actions/workflows/ci.yml/badge.svg)](https://github.com/AskTiba/wirekit-/actions/workflows/ci.yml)
+
 An `ipcalc`-style subnet calculator that turns any IPv4 address and mask into the network, broadcast, host range, and more — in a single command.
 
 ## Description
@@ -76,6 +78,31 @@ MASK      = 11111111111111111111111111000000
 NETWORK   = 11000000101010000000000100000000
 ```
 
+### JSON output
+
+Add `--json` to get the same data as a single machine-readable line — ready for `jq` and friends:
+
+```console
+$ net --json 192.168.1.26 /24
+{"Network": "192.168.1.0", "Netmask": "255.255.255.0", "CIDR": "/24", "Broadcast": "192.168.1.255", "HostMin": "192.168.1.1", "HostMax": "192.168.1.254", "Hosts/Net": "254", "Total IPs": "256", "Next network": "192.168.2.0"}
+```
+
+### Base converter
+
+`--conv` converts any number between decimal, binary, and hex — it accepts decimal, `0x` hex, `0b` binary, or a bare string of `0`/`1` digits (read as binary):
+
+```console
+$ net --conv 0xC0A8011A
+Dec = 3232235802
+Bin = 0b11000000101010000000000100011010
+Hex = 0xC0A8011A
+
+$ net --conv 11111111
+Dec = 255
+Bin = 0b00000000000000000000000011111111
+Hex = 0x000000FF
+```
+
 ### Quiz mode
 
 Practice with randomly generated problems — `wirekit` asks, you answer, and it scores you (showing the right answer when you miss):
@@ -149,8 +176,10 @@ python3 wirekit.py 192.168.1.26 /24
 ### Run the test suite
 
 ```bash
-python3 -m pytest
+python3 -m pytest && ruff check . && ruff format --check .
 ```
+
+The same three commands run in CI — if this passes locally, the build is green.
 
 ### Submit a pull request
 
@@ -158,9 +187,9 @@ Fork → create a branch → open a PR against `main`.
 
 ## Roadmap
 
-- Optional JSON output for scripting
 - More quiz question types
+- Packaging for `pipx` / PyPI
 
 ## License
 
-_No license has been added yet — add one (e.g. MIT) if you want others to reuse this._
+MIT — see [LICENSE](LICENSE).
