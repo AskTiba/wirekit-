@@ -191,3 +191,60 @@ def test_run_quiz_scores_answers(monkeypatch, capsys):
     assert "Correct!" in out
     assert "Not quite" in out
     assert "Score: 1/2" in out
+
+
+def test_run_quiz_handles_eof(monkeypatch, capsys):
+    def boom(*a):
+        raise EOFError
+
+    monkeypatch.setattr(wirekit, "make_quiz_question", lambda: ("Q?", "A"))
+    monkeypatch.setattr("builtins.input", boom)
+
+    wirekit.run_quiz()
+
+    out = capsys.readouterr().out
+    assert "Keep practicing!" in out
+    assert "Score" not in out
+
+
+def test_main_prints_table(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "192.168.1.26", "/24"])
+    wirekit.main()
+    out = capsys.readouterr().out
+    assert "Network" in out
+    assert "192.168.1.0" in out
+
+
+def test_main_bits_mode_in_process(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "--bits", "192.168.1.26", "/26"])
+    wirekit.main()
+    out = capsys.readouterr().out
+    assert "NETWORK" in out
+
+
+def test_main_glued_cidr_inline_mask(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "10.0.3.77/21"])
+    wirekit.main()
+    assert "10.0.0.0" in capsys.readouterr().out
+
+
+def test_main_quiz_mode_delegates_to_run_quiz(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "--quiz"])
+    monkeypatch.setattr(wirekit, "run_quiz", lambda: print("quiz-stub"))
+    wirekit.main()
+    assert "quiz-stub" in capsys.readouterr().out
+
+
+def test_main_no_args_errors(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["wirekit"])
+    with pytest.raises(SystemExit) as excinfo:
+        wirekit.main()
+    assert excinfo.value.code == 2
+
+
+def test_main_invalid_ip_errors(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "999.1.1.1", "/24"])
+    with pytest.raises(SystemExit) as excinfo:
+        wirekit.main()
+    assert excinfo.value.code == 2
+    assert "error" in capsys.readouterr().err.lower()

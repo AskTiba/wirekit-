@@ -68,6 +68,22 @@
 
 ---
 
+### STORY-003 — Coverage floor (pytest-cov, fail-under=100) — 2026-10-13
+
+**Q (T1):** Your subprocess CLI tests exercise `main()` end-to-end, yet coverage showed `main()` at 0%. How?
+
+**A:** Coverage instruments *the process it runs in*. `subprocess.run([sys.executable, "wirekit.py", ...])` spawns a fresh interpreter with no coverage tracer — those lines execute, but nothing records them. Fix was dual-layer testing: keep subprocess tests as E2E (they assert real exit code 2 and stderr, which in-process can't prove), add in-process tests calling `wirekit.main()` with `monkeypatch.setattr(sys, "argv", ...)` + `capsys` for coverage. Alternative `COVERAGE_PROCESS_START`/sitecustomize tracing — rejected as heavy machinery for a 105-statement module (TECH-006).
+
+**Q (T1):** Where did `--cov-fail-under=100` come from — vanity metric?
+
+**A:** Measured first: initial baseline was 70% (missing: `show_bits`, quiz EOF handler, all of `main()`). Filled gaps with 7 targeted tests → re-measured 100% of 105 statements → set the floor at the *demonstrated* baseline, not an aspiration (an aspirational floor with nothing behind it just teaches people to game it). 100% is affordable here because the module is tiny and pure-function-heavy; the documented escape is `# pragma: no cover` (used once, on the `__main__` call). On a larger codebase the same method would land at 80–90 — the method is measure→justify→set, never "pick a round number."
+
+**Q (T1):** What did the measurement actually find — was it worth it?
+
+**A:** Three real gaps: (1) quiz EOF handler — the path users hit pressing Ctrl-D daily, never tested; (2) `show_bits` — only reached through a subprocess, so no in-process assertions on its format; (3) `main()` error paths had subprocess coverage only. Each got a test in `tests/test_wirekit.py` matching existing style (monkeypatch argv, capsys, `pytest.raises(SystemExit)` for `parser.error`). Score: 35 tests, 100% coverage, suite still ~2.5s.
+
+---
+
 ## Project Scan (Post-Hoc) — 2026-10-13
 
 ### D1. System Design & Architecture
