@@ -272,3 +272,65 @@ def test_main_json_and_bits_are_mutually_exclusive(monkeypatch, capsys):
         wirekit.main()
     assert excinfo.value.code == 2
     assert "not allowed with" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("3232235802", 3232235802),
+        ("0xC0A8011A", 3232235802),
+        ("0xc0a8011a", 3232235802),
+        ("0b11000000101010000000000100011010", 3232235802),
+        ("11000000101010000000000100011010", 3232235802),
+        ("1_000_000", 1000000),
+        ("0", 0),
+        ("4294967295", 4294967295),
+        ("0xFFFFFFFF", 4294967295),
+    ],
+)
+def test_parse_number_accepts_all_forms(text, expected):
+    assert wirekit.parse_number(text) == expected
+
+
+def test_parse_number_bare_zeroes_and_ones_read_as_binary():
+    assert wirekit.parse_number("10") == 2
+    assert wirekit.parse_number("11111111") == 255
+
+
+@pytest.mark.parametrize("text", ["4294967296", "-1", "abc", "0x", "0b12"])
+def test_parse_number_rejects_invalid(text):
+    with pytest.raises(ValueError):
+        wirekit.parse_number(text)
+
+
+def test_main_conv_mode_prints_all_bases(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "--conv", "0xC0A8011A"])
+    wirekit.main()
+    out = capsys.readouterr().out
+    assert "Dec = 3232235802" in out
+    assert "Bin = 0b11000000101010000000000100011010" in out
+    assert "Hex = 0xC0A8011A" in out
+
+
+def test_main_conv_bare_binary_input(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "--conv", "11111111"])
+    wirekit.main()
+    out = capsys.readouterr().out
+    assert "Dec = 255" in out
+    assert "Hex = 0x000000FF" in out
+
+
+def test_main_conv_invalid_errors(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "--conv", "abc"])
+    with pytest.raises(SystemExit) as excinfo:
+        wirekit.main()
+    assert excinfo.value.code == 2
+    assert "error" in capsys.readouterr().err.lower()
+
+
+def test_main_conv_out_of_range_errors(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "--conv", "4294967296"])
+    with pytest.raises(SystemExit) as excinfo:
+        wirekit.main()
+    assert excinfo.value.code == 2
+    assert "error" in capsys.readouterr().err.lower()

@@ -100,6 +100,22 @@
 
 ---
 
+### STORY-007 — `--conv` base converter — 2026-10-13
+
+**Q (T1):** `--conv 11111111` returns 255, not eleven-million-one-hundred-eleven-thousand. Why?
+
+**A:** Documented ambiguity rule: strings of only `0`/`1` digits (no underscores) are read as **binary** — that's the conversion people want in an IPv4 tool (`--conv 11111111` = the /8 mask). Underscores opt out into decimal (`1_000_000` → 1000000 — underscores signal thousand-grouping, i.e. decimal intent). Prefixes (`0x`, `0b`, `0o`) always win via `int(text, 0)`. Every rule has a test naming the behavior (`test_parse_number_bare_zeroes_and_ones_read_as_binary`) so the surprise is at least a documented, tested surprise.
+
+**Q (T1):** Your first test run failed 6 cases — what actually broke?
+
+**A:** Two different failures, both mine: (1) a hand-arithmetic slip — I asserted `0xC0A8011A == 3232235786` when the correct value is `3232235802` (verified: `192·2²⁴ + 168·2¹⁶ + 1·2⁸ + 26`); the implementation was right and the *test* was wrong. (2) A real design flaw: `1_000_000` was being parsed as binary 64 after underscore-stripping — fixed by only taking the binary path when the input has no underscores. Lesson: when code and test disagree, verify the test against ground truth (`python3 -c 'print(...)'`) before touching code.
+
+**Q (T1):** Why a separate `parse_number()` instead of inline in `main()`?
+
+**A:** Purity + the 100% coverage floor: `parse_number` is a deterministic string→int function with ~12 meaningful inputs — parametrized unit tests cover every branch cheaply; `main()` stays a thin argparse shell. Also `convert()` returns rows in the same `(key, value)` shape as `analyze()`, so the existing table printer and `--json` branch work unchanged — adding a mode cost one flag, one 12-line function, zero changes to output plumbing. That's the payoff of the row-shaped contract from STORY-001.
+
+---
+
 ## Project Scan (Post-Hoc) — 2026-10-13
 
 ### D1. System Design & Architecture

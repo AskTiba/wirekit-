@@ -27,7 +27,7 @@
 | STORY-006 | Hypothesis property tests for subnet math | 2 | ✅ Done |
 | STORY-003 | Coverage floor (pytest-cov + threshold) — closes DEBT-002 | 1 | ✅ Done |
 | STORY-001 | `--json` output mode | 2 | ✅ Done |
-| STORY-007 | `--conv` base converter (decimal ↔ binary ↔ hex) — new, requested 2026-10-13 | 2 | ⏸ Not started (U6) |
+| STORY-007 | `--conv` base converter (decimal ↔ binary ↔ hex) — new, requested 2026-10-13 | 2 | ✅ Done |
 | STORY-004 | LICENSE (MIT per README) + README CI badge — closes DEBT-003 | 1 | ⏸ Not started (U7) |
 | STORY-005 | Enable branch protection (manual — developer) | 1 | ⏸ Not started |
 

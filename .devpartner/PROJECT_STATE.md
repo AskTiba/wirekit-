@@ -21,6 +21,7 @@
 | Property-based tests — 5 hypothesis invariants over subnet math (alignment, broadcast, analyze consistency, next-network, mask-form round trip) | `python3 -m pytest tests/test_properties.py` 5 passed; full suite 28 passed | 2026-10-13 |
 | Coverage floor — pytest-cov 7.1.0, `--cov=wirekit --cov-fail-under=100` via `pytest.ini` addopts; 7 new in-process tests (main paths, quiz EOF) closed the 70%→100% gap | `python3 -m pytest` 35 passed, 100% of 105 statements, floor enforced | 2026-10-13 |
 | `--json` flag — machine-readable output (`json.dumps(dict(rows))`, same keys/values as table); `--bits`/`--json`/`--quiz` are mutually exclusive (exit 2) | 2 new tests; `python3 wirekit.py --json 192.168.1.26 /24` piped to `json.tool` valid; 37 tests, 100% coverage | 2026-10-13 |
+| `--conv` base converter — `parse_number()` (0x/0b/0o prefixes, bare 0/1 = binary, underscores = decimal, range 0..4294967295) + `convert()` rows (Dec/Bin/Hex); mode joined the exclusive group | 19 new tests; live: `--conv 0xC0A8011A` correct, invalid → exit 2; 56 tests, 100% coverage | 2026-10-13 |
 | GitHub Actions CI (lint job + test matrix 3.11–3.14 + security workflow) | Files generated 2026-10-13 — **activates on first push; not yet run** | 2026-10-13 |
 
 ---
@@ -29,7 +30,7 @@
 
 | Story/Task | Current Unit | Exact Next Action | Files |
 |---|---|---|---|
-| Sprint 1 (see [SPRINT_LOG.md](SPRINT_LOG.md)) | STORY-002 ✅ (9aab8d8), STORY-006 ✅ (b007cf3), STORY-003 ✅ (4c4740c), STORY-001 ✅ awaiting stage/commit | Next unit: **STORY-007 — `--conv` base converter**: new `--conv VALUE` flag (accepts `0x`/`0b`/decimal/bare binary with underscores), prints dec/bin/hex lines via stdlib `int(x, 0)` + format; test-first (valid forms + invalid → exit 2), keep 100% coverage | `wirekit.py`, `tests/test_wirekit.py` |
+| Sprint 1 (see [SPRINT_LOG.md](SPRINT_LOG.md)) | STORY-002 ✅ (9aab8d8), STORY-006 ✅ (b007cf3), STORY-003 ✅ (4c4740c), STORY-001 ✅ (da66e5a), STORY-007 ✅ awaiting stage/commit | Next unit: **STORY-004 — LICENSE + README badge**: add `LICENSE` (MIT, developer name placeholder → ask), add CI status badge to README.md top, close DEBT-003 | `LICENSE`, `README.md` |
 
 > **Granularity rule:** "Exact Next Action" means the precise command, function name, or
 > file — not "working on auth." A new session must be able to pick up from this without

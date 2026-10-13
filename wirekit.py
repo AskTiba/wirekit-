@@ -7,6 +7,7 @@ Usage:
     python3 wirekit.py 192.168.1.26 255.255.255.0
     python3 wirekit.py 192.168.1.26/24
     python3 wirekit.py --bits 192.168.1.26 /26
+    python3 wirekit.py --conv 0xC0A8011A
 """
 
 import argparse
@@ -22,6 +23,27 @@ def normalize_mask(token):
         if not 0 <= prefix <= 32:
             raise ValueError(f"prefix /{prefix} must be between 0 and 32")
     return token
+
+
+def parse_number(text):
+    cleaned = text.strip()
+    bare = cleaned.replace("_", "")
+    if bare and set(bare) <= {"0", "1"} and "_" not in cleaned:
+        value = int(bare, 2)
+    else:
+        value = int(cleaned, 0)
+    if not 0 <= value <= 0xFFFFFFFF:
+        raise ValueError(f"{text} is outside 0..4294967295")
+    return value
+
+
+def convert(text):
+    n = parse_number(text)
+    return [
+        ("Dec", str(n)),
+        ("Bin", f"0b{n:032b}"),
+        ("Hex", f"0x{n:08X}"),
+    ]
 
 
 def build_network(ip, mask):
@@ -153,6 +175,11 @@ def main():
         "--json", action="store_true", help="machine-readable JSON output"
     )
     mode.add_argument(
+        "--conv",
+        metavar="NUMBER",
+        help="convert a number (decimal, 0x hex, 0b or bare binary)",
+    )
+    mode.add_argument(
         "--quiz", action="store_true", help="interactive subnetting practice"
     )
     args = parser.parse_args()
@@ -161,16 +188,21 @@ def main():
         run_quiz()
         return
 
-    if args.ip is None:
-        parser.error("give an IPv4 address, e.g. 192.168.1.26 /24")
+    if args.conv is not None:
+        try:
+            rows = convert(args.conv)
+        except ValueError as exc:
+            parser.error(str(exc))
+    else:
+        if args.ip is None:
+            parser.error("give an IPv4 address, e.g. 192.168.1.26 /24")
 
-    try:
-        ip_obj = ipaddress.ip_address(args.ip.split("/")[0])
-        net = build_network(args.ip, args.mask)
-    except ValueError as exc:
-        parser.error(str(exc))
-
-    rows = analyze(net)
+        try:
+            ip_obj = ipaddress.ip_address(args.ip.split("/")[0])
+            net = build_network(args.ip, args.mask)
+        except ValueError as exc:
+            parser.error(str(exc))
+        rows = analyze(net)
     if args.json:
         print(json.dumps(dict(rows)))
         return
