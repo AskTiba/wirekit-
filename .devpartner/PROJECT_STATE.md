@@ -31,7 +31,7 @@
 
 | Story/Task | Current Unit | Exact Next Action | Files |
 |---|---|---|---|
-| Sprint 1 (see [SPRINT_LOG.md](SPRINT_LOG.md)) | All code stories ✅ (STORY-004 awaiting stage/commit); STORY-005 remains | Next: **STORY-005 — branch protection (manual, developer)**: enable on GitHub (Settings → Branches → `main`: require PRs + status check `ci-success`) — needs first push of `main` to GitHub, then developer clicks through; after that: sprint retro + close | GitHub settings (developer) |
+| Sprint 1 (see [SPRINT_LOG.md](SPRINT_LOG.md)) | **Review** — 9/10 pts shipped & pushed, CI+Security green on `main` (pytest 9.1.1, PYSEC fixed) | Next: developer enables **branch protection** (Settings → Branches → `main`: require PRs + status check `ci-success`); then Sprint 2 planning (backlog: pipx/PyPI packaging, quiz types, `.venv`+uv workflow) | GitHub settings (developer) |
 
 > **Granularity rule:** "Exact Next Action" means the precise command, function name, or
 > file — not "working on auth." A new session must be able to pick up from this without

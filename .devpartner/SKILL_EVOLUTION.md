@@ -39,6 +39,8 @@
 | 2026-10-13 | All address arithmetic at the edges of IPv4 space goes through `int`, never `IPv4Address` arithmetic (can overflow mid-expression) | ERR-001 |
 | 2026-10-13 | Commits before 2026-10-13 predate the protocol; from bootstrap onward: conventional commits ≤12 words, test-first, commit only on developer trigger | core-partner §8 |
 | 2026-10-13 | This is a terminal tool — WCAG/browser conventions don't apply; keep output plain-text ordered key/value lines and meaningful exit codes | PROJECT_STATE → Conventions |
+| 2026-10-13 | **Coverage floors are measured, never aspirational** — measure baseline first, fill real gaps with tests, then set `--cov-fail-under` at the demonstrated number (100% here; escape only via `# pragma: no cover`) | TECH-006; STORY-003 |
+| 2026-10-13 | **Dual-layer testing is the default** — subprocess CLI tests are E2E (real exit codes/stderr) but don't credit module coverage; in-process tests (`monkeypatch` argv + `capsys`) back `main()` for coverage and fast feedback | STORY-003; INTERVIEW_QA |
 
 ---
 
