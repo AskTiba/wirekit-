@@ -307,7 +307,7 @@
 
 **Direct answer:** No third-party code runs on user machines at all — the PyPI-compromise and transitive-dependency-vulnerability classes don't exist for `wirekit` users; CI still audits the *dev* toolchain because that's what runs on the runner.
 
-**Concept:** Separate the runtime trust boundary (users) from the build trust boundary (CI). Users get stdlib; CI installs pinned `pytest` (9.0.3 — bumped from 9.0.2 by the first pip-audit run, PYSEC-2026-1845) — audited by `pip-audit`, PR-time `dependency-review-action` fails on high severity, Dependabot keeps pins and actions current, gitleaks scans history for secrets.
+**Concept:** Separate the runtime trust boundary (users) from the build trust boundary (CI). Users get stdlib; CI installs pinned `pytest` (9.1.1 — chain: 9.0.2 vulnerable, 9.0.3 minimum fix for PYSEC-2026-1845 found by the first pip-audit run, then 9.1.1 latest superseding Dependabot's PR) — audited by `pip-audit`, PR-time `dependency-review-action` fails on high severity, Dependabot keeps pins and actions current, gitleaks scans history for secrets.
 
 **In this project:** `requirements-dev.txt` (only pinned dep) → `security.yml` dependencies job; `dependabot.yml` (pip + github-actions weekly).
 
@@ -471,7 +471,7 @@
 
 **Concept:** Cache keys must track the inputs that can invalidate the output — dependency file hash for pip, matrix Python version for interpreters. A cache miss must never be a correctness failure: `pip install -r requirements-dev.txt` runs regardless.
 
-**In this project:** `ci.yml` setup-python step: `cache: pip` + `cache-dependency-path: requirements-dev.txt` — one pinned dep (`pytest==9.0.3`), so savings are seconds, correctness is the point (CI runs what you run).
+**In this project:** `ci.yml` setup-python step: `cache: pip` + `cache-dependency-path: requirements-dev.txt` — one pinned dep (`pytest==9.1.1`), so savings are seconds, correctness is the point (CI runs what you run).
 
 **Edge cases:** typo in `cache-dependency-path` silently disables caching (research lesson — validated at scaffold); this repo's local PEP 668 environment doesn't apply to CI runners (setup-python's interpreter isn't externally managed).
 

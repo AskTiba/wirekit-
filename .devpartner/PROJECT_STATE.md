@@ -68,7 +68,7 @@
 | Framework | none | — | single-file CLI (`wirekit.py`) |
 | Database | none | — | stateless calculator |
 | Auth | none | — | local tool, no network I/O |
-| Testing | pytest | 9.0.3 (dev-only, pinned in `requirements-dev.txt`) | includes subprocess CLI integration tests |
+| Testing | pytest | 9.1.1 (dev-only, pinned in `requirements-dev.txt`) | includes subprocess CLI integration tests |
 | CI | GitHub Actions | checkout@v7, setup-python@v7, codeql-action@v4, gitleaks-action@v3 (SHA-pinned) | generated 2026-10-13 by ci-partner |
 | Packaging | none (script copy) | — | `install.sh` copies `wirekit.py` → `~/.local/bin/wirekit` |
 
