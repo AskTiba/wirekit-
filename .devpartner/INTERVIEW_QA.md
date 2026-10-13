@@ -52,6 +52,22 @@
 
 ---
 
+### STORY-006 — Hypothesis property tests (subnet math) — 2026-10-13
+
+**Q (T1):** Example tests passed 23/23 — why add property-based tests?
+
+**A:** Examples prove *specific* cases; properties prove *universal invariants*. Subnet math is all invariants: every network must be prefix-aligned, broadcast must equal network+total−1, usable hosts must follow the /31 vs /32 rule — for all 2³² addresses × 33 prefixes, not the dozen an author imagines. Hypothesis generates edge space automatically (its first find was `0.0.0.0/0`, which no human example covered), plus shrinking turns failures into a minimal repro. Cost: one dev dependency (`hypothesis==6.169.0`, dev-only so ADR-002 untouched).
+
+**Q (T1):** The first red run failed — was that a bug in wirekit?
+
+**A:** No — it was a bug in the *test*: I assumed `analyze()` returned integer-ish values and called `int("0.0.0.1")`. Property tests find test-specification bugs too: the failure forced a precise decision about `analyze()`'s output contract (dotted strings), documented in `rows["HostMin"]` parsing via `ipaddress.ip_address()`. Lesson: red-first applies to property tests equally — triage the failure into (code bug | test bug | property bug) before touching implementation; the other 4 properties passed immediately, so code was correct.
+
+**Q (T1):** What properties did you pick, and why these five?
+
+**A:** Chose independent invariants covering each output dimension: (1) alignment `nw % total == 0` + ip-in-block, (2) broadcast arithmetic, (3) internal consistency of all 9 `analyze` rows incl. usable formula, (4) next-network one-block-past with the `> 0xFFFFFFFF` → "beyond IPv4 space" edge, (5) all four mask input forms (`24`, `/24`, dotted, slash-IP) build the same network. Deliberately avoided: "ip is inside HostMin..HostMax" (false for network-address IPs — a property that must hold by design, not intuition) and quiz randomness (covered by seeded example tests).
+
+---
+
 ## Project Scan (Post-Hoc) — 2026-10-13
 
 ### D1. System Design & Architecture

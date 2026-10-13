@@ -18,6 +18,7 @@
 | CLI error paths — invalid IP, `/33`, missing mask, no args → exit code 2, no traceback | `test_cli_invalid_ip_fails`, `test_cli_invalid_prefix_fails`, `test_cli_missing_mask_fails`, `test_cli_no_args_fails` | 2026-10-13 |
 | Cross-shell installer (`install.sh` → `~/.local/bin` + `net` alias, zsh/bash detection) | Manual run (pre-skill); code review 2026-10-13 | 2026-10-12 |
 | Ruff lint+format gate (local + CI lint job, ruff 0.17.0 pinned, `ruff.toml`) | `ruff check .` + `ruff format --check .` both green; `python3 -m pytest` 23 passed | 2026-10-13 |
+| Property-based tests — 5 hypothesis invariants over subnet math (alignment, broadcast, analyze consistency, next-network, mask-form round trip) | `python3 -m pytest tests/test_properties.py` 5 passed; full suite 28 passed | 2026-10-13 |
 | GitHub Actions CI (lint job + test matrix 3.11–3.14 + security workflow) | Files generated 2026-10-13 — **activates on first push; not yet run** | 2026-10-13 |
 
 ---
@@ -26,7 +27,7 @@
 
 | Story/Task | Current Unit | Exact Next Action | Files |
 |---|---|---|---|
-| Sprint 1 (see [SPRINT_LOG.md](SPRINT_LOG.md)) | STORY-002 ✅ done, awaiting stage/commit | Next unit: **STORY-006 — Hypothesis property tests**: add `hypothesis` pin to `requirements-dev.txt`, create `tests/test_properties.py` (properties over `analyze`/`build_network`) | `requirements-dev.txt`, `tests/test_properties.py` |
+| Sprint 1 (see [SPRINT_LOG.md](SPRINT_LOG.md)) | STORY-002 ✅ committed (9aab8d8), STORY-006 ✅ awaiting stage/commit | Next unit: **STORY-003 — Coverage floor**: add `pytest-cov` pin to `requirements-dev.txt`, add `--cov=wirekit --cov-fail-under=<measured baseline>` to pytest.ini (measure first, then set floor), add coverage badge to README later with STORY-004 | `requirements-dev.txt`, `pytest.ini` |
 
 > **Granularity rule:** "Exact Next Action" means the precise command, function name, or
 > file — not "working on auth." A new session must be able to pick up from this without
@@ -110,7 +111,7 @@ python3 -m pytest -q --junitxml=test-results/pytest.xml
 - **Commit message format:** conventional commits — `<type>: <description>`, ≤12 words, imperative (core-partner §8.6)
 - **Local commit gate:** `python3 -m pytest && ruff check . && ruff format --check .` (all three must pass; CI lint job mirrors it exactly)
 - **Branch strategy:** GitHub Flow — `main` + `feature/*`, `fix/*`, `refactor/*`, `chore/*`
-- **Test strategy:** single suite mixing pure-function unit tests and subprocess CLI integration tests (the CLI *is* the product surface — exit codes and stderr are asserted). E2E = the subprocess tests. No coverage threshold yet (DEBT-002).
+- **Test strategy:** two layers — (1) example tests (pure-function units + subprocess CLI integration; the CLI *is* the product surface — exit codes and stderr are asserted; E2E = subprocess tests) and (2) property-based tests (`tests/test_properties.py`, hypothesis 6.169.0 — universal invariants over all addresses/prefixes). No coverage threshold yet (DEBT-002).
 - **Accessibility conformance target:** N/A — terminal tool. Keep output plain-text ordered key/value lines (screen-reader friendly); never ship ANSI-only meaning.
 - **Runtime dependency policy:** stdlib only. Any new runtime dependency requires a DECISIONS.md entry (dependency vetting, core-partner §1.2).
 - **No browser/breakpoints:** not a UI project.
