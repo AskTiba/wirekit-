@@ -1,0 +1,11 @@
+# wirekit — ruff configuration (linter + formatter)
+# Sources: docs.astral.sh/ruff/configuration + /linter (recommended rule set, 2026-10)
+# Local gate:  ruff check . && ruff format --check .
+# CI stage:    .github/workflows/ci.yml lint job (same commands, same pinned version)
+target-version = "py311"
+line-length = 88
+
+[lint]
+# Explicit select (ruff docs: prefer select over extend-select).
+# E+F = defaults, UP = pyupgrade, B = bugbear, SIM = simplify, I = import sort.
+select = ["E", "F", "UP", "B", "SIM", "I"]

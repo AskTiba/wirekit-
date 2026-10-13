@@ -34,6 +34,24 @@
 
 ---
 
+## Story Entries (Chronological)
+
+### STORY-002 — Ruff lint+format gate (local + CI) — 2026-10-13
+
+**Q (T1):** Why ruff over the flake8 + black + isort trio?
+
+**A:** One Rust binary does linting, formatting, and import sorting with one config (`ruff.toml`), runs 10–100× faster than the Python trio, and its formatter is black-compatible so output style is familiar. Tradeoff: smaller plugin ecosystem than flake8 — accepted because the official rule set (`E,F,UP,B,SIM,I`) covers this codebase's needs, and ruff is dev-only so ADR-002 (zero *runtime* deps) is untouched. Rejected installing all three tools: three configs, three version pins, three CI steps.
+
+**Q (T1):** Your local ruff (0.15.15) was older than the pin (0.17.0) — why does that matter?
+
+**A:** Version drift is the classic "passes locally, fails in CI" trap — different ruff versions enable different rules (0.17.0 even changed defaults and `target-version`). Fix: pin `ruff==0.17.0` in `requirements-dev.txt`, upgrade the local tool via `pipx upgrade ruff`, and have CI install from the same file — one source of truth for both environments (in this project: `requirements-dev.txt:2`, gate verified green on both after alignment).
+
+**Q (T1):** Why configure ruff in `ruff.toml` instead of the conventional `pyproject.toml`?
+
+**A:** `pyproject.toml` signals "this is a packaged project" — wirekit deliberately has no packaging metadata (single-file `install.sh` distribution, ADR-002), so `ruff.toml` keeps tool config from implying a packaging decision that hasn't been made. Equivalent schema, no `[tool.ruff]` header needed. When packaging lands (pipx/PyPI scale item), config can migrate into `pyproject.toml` in one commit. Edge case: ruff discovers `ruff.toml` automatically — no `--config` flag needed, so CI commands stay identical to local.
+
+---
+
 ## Project Scan (Post-Hoc) — 2026-10-13
 
 ### D1. System Design & Architecture
@@ -498,8 +516,8 @@ else:
 **Code — how it works here:**
 ```python
 if prefix >= 31:
-    host_min, host_max = nw, bc   # /31: both addresses usable (RFC 3021)
-    usable = total                 # /32: the address itself
+    host_min, host_max = nw, bc  # /31: both addresses usable (RFC 3021)
+    usable = total  # /32: the address itself
 else:
     host_min, host_max = nw + 1, bc - 1
     usable = total - 2

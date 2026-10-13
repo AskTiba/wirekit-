@@ -17,7 +17,8 @@
 | `--quiz` interactive practice mode (random problems, scoring, `q` to quit) | `test_quiz_question_is_well_formed`, `test_run_quiz_scores_answers` | 2026-10-13 |
 | CLI error paths — invalid IP, `/33`, missing mask, no args → exit code 2, no traceback | `test_cli_invalid_ip_fails`, `test_cli_invalid_prefix_fails`, `test_cli_missing_mask_fails`, `test_cli_no_args_fails` | 2026-10-13 |
 | Cross-shell installer (`install.sh` → `~/.local/bin` + `net` alias, zsh/bash detection) | Manual run (pre-skill); code review 2026-10-13 | 2026-10-12 |
-| GitHub Actions CI (test matrix 3.11–3.14 + security workflow) | Files generated 2026-10-13 — **activates on first push; not yet run** | 2026-10-13 |
+| Ruff lint+format gate (local + CI lint job, ruff 0.17.0 pinned, `ruff.toml`) | `ruff check .` + `ruff format --check .` both green; `python3 -m pytest` 23 passed | 2026-10-13 |
+| GitHub Actions CI (lint job + test matrix 3.11–3.14 + security workflow) | Files generated 2026-10-13 — **activates on first push; not yet run** | 2026-10-13 |
 
 ---
 
@@ -25,7 +26,7 @@
 
 | Story/Task | Current Unit | Exact Next Action | Files |
 |---|---|---|---|
-| Skill 6.0 self-bootstrap (BOOT.md Step 0) | All 7 items produced | Developer decides: stage bootstrap files (`git add .devpartner/ AGENTS.md .opencode/ .github/ requirements-dev.txt .gitignore`) | `.devpartner/*`, `AGENTS.md`, `.opencode/skills/*`, `.github/*`, `requirements-dev.txt` |
+| Sprint 1 (see [SPRINT_LOG.md](SPRINT_LOG.md)) | STORY-002 ✅ done, awaiting stage/commit | Next unit: **STORY-006 — Hypothesis property tests**: add `hypothesis` pin to `requirements-dev.txt`, create `tests/test_properties.py` (properties over `analyze`/`build_network`) | `requirements-dev.txt`, `tests/test_properties.py` |
 
 > **Granularity rule:** "Exact Next Action" means the precise command, function name, or
 > file — not "working on auth." A new session must be able to pick up from this without
@@ -96,6 +97,10 @@ python3 wirekit.py 192.168.1.26 /24
 # Test
 python3 -m pytest            # 23 tests, ~2s
 
+# Lint + format gate (ruff 0.17.0, config ruff.toml)
+ruff check .
+ruff format --check .
+
 # Test with CI-style JUnit report
 python3 -m pytest -q --junitxml=test-results/pytest.xml
 ```
@@ -103,6 +108,7 @@ python3 -m pytest -q --junitxml=test-results/pytest.xml
 ### Conventions
 
 - **Commit message format:** conventional commits — `<type>: <description>`, ≤12 words, imperative (core-partner §8.6)
+- **Local commit gate:** `python3 -m pytest && ruff check . && ruff format --check .` (all three must pass; CI lint job mirrors it exactly)
 - **Branch strategy:** GitHub Flow — `main` + `feature/*`, `fix/*`, `refactor/*`, `chore/*`
 - **Test strategy:** single suite mixing pure-function unit tests and subprocess CLI integration tests (the CLI *is* the product surface — exit codes and stderr are asserted). E2E = the subprocess tests. No coverage threshold yet (DEBT-002).
 - **Accessibility conformance target:** N/A — terminal tool. Keep output plain-text ordered key/value lines (screen-reader friendly); never ship ANSI-only meaning.

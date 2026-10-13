@@ -12,7 +12,6 @@ Usage:
 import argparse
 import ipaddress
 import random
-import sys
 
 
 def normalize_mask(token):
@@ -131,18 +130,26 @@ def run_quiz():
     print("Keep practicing!")
 
 
-
 def main():
     parser = argparse.ArgumentParser(
         prog="wirekit",
-        description="Compute network, broadcast, host range and more from an IP and mask.",
+        description=(
+            "Compute network, broadcast, host range and more from an IP and mask."
+        ),
     )
-    parser.add_argument("ip", nargs="?", default=None,
-                        help="IPv4 address (e.g. 192.168.1.26)")
-    parser.add_argument("mask", nargs="?", default=None,
-                        help="prefix (/24), integer (24), or dotted mask (255.255.255.0)")
+    parser.add_argument(
+        "ip", nargs="?", default=None, help="IPv4 address (e.g. 192.168.1.26)"
+    )
+    parser.add_argument(
+        "mask",
+        nargs="?",
+        default=None,
+        help="prefix (/24), integer (24), or dotted mask (255.255.255.0)",
+    )
     parser.add_argument("--bits", action="store_true", help="show binary IP AND mask")
-    parser.add_argument("--quiz", action="store_true", help="interactive subnetting practice")
+    parser.add_argument(
+        "--quiz", action="store_true", help="interactive subnetting practice"
+    )
     args = parser.parse_args()
 
     if args.quiz:

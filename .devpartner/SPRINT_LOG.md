@@ -10,7 +10,36 @@
 
 | Sprint | Goal | Committed | Completed | Velocity | Completion Rate |
 |---|---|---|---|---|---|
-| *(none yet)* | — | — | — | — | — |
+| Sprint 1 | Quality gates + scriptable output (`--json`, `--conv`) | 10 | — | — | — |
+
+---
+
+## Sprint 1 — Quality gates + scriptable output
+
+**Period:** 2026-10-13 → 2026-10-20
+**Status:** In Progress
+
+### Committed
+
+| ID | Story | Pts | Outcome |
+|----|-------|-----|---------|
+| STORY-002 | Ruff lint+format gate (local + CI) — closes DEBT-001 | 1 | ✅ Done |
+| STORY-006 | Hypothesis property tests for subnet math | 2 | ⏸ Not started (U3) |
+| STORY-003 | Coverage floor (pytest-cov + threshold) — closes DEBT-002 | 1 | ⏸ Not started (U4) |
+| STORY-001 | `--json` output mode | 2 | ⏸ Not started (U5) |
+| STORY-007 | `--conv` base converter (decimal ↔ binary ↔ hex) — new, requested 2026-10-13 | 2 | ⏸ Not started (U6) |
+| STORY-004 | LICENSE (MIT per README) + README CI badge — closes DEBT-003 | 1 | ⏸ Not started (U7) |
+| STORY-005 | Enable branch protection (manual — developer) | 1 | ⏸ Not started |
+
+**Total committed:** 10 pts
+
+### Not Delivered (moved to backlog)
+
+- *(none yet)*
+
+### Retrospective
+
+*(to be filled at sprint close)*
 
 ---
 

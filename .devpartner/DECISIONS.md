@@ -31,6 +31,7 @@
 | TECH-001 | 2026-10-13 | pytest (test runner) | 9.0.2 pinned | De-facto Python standard; `pytest.ini` already drives `testpaths`/`pythonpath`; supports Python ≥3.10 (covers full CI matrix) | `unittest` (more boilerplate, weaker parametrize/monkeypatch/capsys — all three used in `tests/test_wirekit.py`) |
 | TECH-002 | 2026-10-13 | `ipaddress` (stdlib) for subnet math | builtin | Correct RFC handling (`strict=False` normalization, `num_addresses`, netmask/broadcast) with zero deps | Raw integer bitmasking by hand (re-implements RFCs, bug-prone); `netaddr` (runtime dep, violates ADR-002) |
 | TECH-003 | 2026-10-13 | GitHub Actions + codeql-action@v4 + gitleaks-action@v3 (SHA-pinned) + dependency-review-action@v5 | current as of 2026-10-13 | Remote is GitHub; CodeQL is native SAST; gitleaks v3 **required** — v2's Node 20 runtime was removed from GitHub runners 2026-09-16; personal repo → no gitleaks license needed | GitLab CI/CircleCI (wrong platform); unpinned `gitleaks@v2` (would fail outright); third-party "all-in-one" CI marketplaces (supply-chain risk) |
+| TECH-004 | 2026-10-13 | ruff (lint + format + import sort) | 0.17.0 pinned | Single Rust binary, black-compatible formatter, one config for all three jobs, 10-100× faster than the trio; official docs' recommended rule set (`E,F,UP,B,SIM,I`); config in `ruff.toml` to avoid implying packaging metadata (no `pyproject.toml` yet by design) | flake8+black+isort trio (three tools, three configs, much slower); pylint (no formatter, more pedantic, slower) |
 
 ---
 
@@ -76,6 +77,6 @@
 
 | ID | Date | Item | Impact | Target sprint to address |
 |---|---|---|---|---|
-| DEBT-001 | 2026-10-13 | No linter/formatter (ruff) configured — local gate and CI both skip lint/format/type-check stages | Style drift and silent lint-class bugs as contributors grow; CI shape has the gap flagged (ci-partner §2.8) | Sprint 1 |
+| DEBT-001 | 2026-10-13 | No linter/formatter (ruff) configured — **closed 2026-10-13**: `ruff.toml` + pinned 0.17.0, local gate + CI lint job (STORY-002) | Style drift and silent lint-class bugs as contributors grow; CI shape has the gap flagged (ci-partner §2.8) | ~~Sprint 1~~ closed |
 | DEBT-002 | 2026-10-13 | No coverage measurement or threshold (pytest-cov not installed) | Coverage regressions go unnoticed; 23 tests may have blind spots (e.g. `show_bits` edge paths) | Sprint 1 |
 | DEBT-003 | 2026-10-13 | No LICENSE file (README states this openly) | Legally unlicensed — others can't legally reuse; blocks some portfolio reviewers | Sprint 1 (developer chooses license) |

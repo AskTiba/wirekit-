@@ -35,7 +35,7 @@
 |---|---|---|
 | 2026-10-13 | **Runtime stays stdlib-only** — any new runtime dependency needs a DECISIONS.md entry first (ADR-002) | ADR-002 |
 | 2026-10-13 | **Dev/test deps live only in pinned `requirements-dev.txt`** — CI installs exactly that file (command parity: CI runs what you run) | ADR-001 |
-| 2026-10-13 | Local commit gate for this project = `python3 -m pytest` (no formatter/linter/type-checker exists yet — DEBT-001; add stages to both gate and CI together when ruff lands) | ci-partner §1.1 mirror |
+| 2026-10-13 | **Local commit gate = `python3 -m pytest && ruff check . && ruff format --check .`** (ruff 0.17.0 pinned in `requirements-dev.txt`, config `ruff.toml`, target py311; CI lint job mirrors the same commands — gate + CI landed together per convention) | ci-partner §1.1 mirror; STORY-002 |
 | 2026-10-13 | All address arithmetic at the edges of IPv4 space goes through `int`, never `IPv4Address` arithmetic (can overflow mid-expression) | ERR-001 |
 | 2026-10-13 | Commits before 2026-10-13 predate the protocol; from bootstrap onward: conventional commits ≤12 words, test-first, commit only on developer trigger | core-partner §8 |
 | 2026-10-13 | This is a terminal tool — WCAG/browser conventions don't apply; keep output plain-text ordered key/value lines and meaningful exit codes | PROJECT_STATE → Conventions |
