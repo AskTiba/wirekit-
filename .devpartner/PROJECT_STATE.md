@@ -20,6 +20,7 @@
 | Ruff lint+format gate (local + CI lint job, ruff 0.17.0 pinned, `ruff.toml`) | `ruff check .` + `ruff format --check .` both green; `python3 -m pytest` 23 passed | 2026-10-13 |
 | Property-based tests — 5 hypothesis invariants over subnet math (alignment, broadcast, analyze consistency, next-network, mask-form round trip) | `python3 -m pytest tests/test_properties.py` 5 passed; full suite 28 passed | 2026-10-13 |
 | Coverage floor — pytest-cov 7.1.0, `--cov=wirekit --cov-fail-under=100` via `pytest.ini` addopts; 7 new in-process tests (main paths, quiz EOF) closed the 70%→100% gap | `python3 -m pytest` 35 passed, 100% of 105 statements, floor enforced | 2026-10-13 |
+| `--json` flag — machine-readable output (`json.dumps(dict(rows))`, same keys/values as table); `--bits`/`--json`/`--quiz` are mutually exclusive (exit 2) | 2 new tests; `python3 wirekit.py --json 192.168.1.26 /24` piped to `json.tool` valid; 37 tests, 100% coverage | 2026-10-13 |
 | GitHub Actions CI (lint job + test matrix 3.11–3.14 + security workflow) | Files generated 2026-10-13 — **activates on first push; not yet run** | 2026-10-13 |
 
 ---
@@ -28,7 +29,7 @@
 
 | Story/Task | Current Unit | Exact Next Action | Files |
 |---|---|---|---|
-| Sprint 1 (see [SPRINT_LOG.md](SPRINT_LOG.md)) | STORY-002 ✅ (9aab8d8), STORY-006 ✅ (b007cf3), STORY-003 ✅ awaiting stage/commit | Next unit: **STORY-001 — `--json` output mode**: add `--json` flag to argparse in `main()`, emit `json.dumps` of the analyze rows (key→value dict) instead of aligned text; write test first (CLI subprocess asserting `json.loads(result.stdout)`), keep 100% coverage | `wirekit.py`, `tests/test_wirekit.py` |
+| Sprint 1 (see [SPRINT_LOG.md](SPRINT_LOG.md)) | STORY-002 ✅ (9aab8d8), STORY-006 ✅ (b007cf3), STORY-003 ✅ (4c4740c), STORY-001 ✅ awaiting stage/commit | Next unit: **STORY-007 — `--conv` base converter**: new `--conv VALUE` flag (accepts `0x`/`0b`/decimal/bare binary with underscores), prints dec/bin/hex lines via stdlib `int(x, 0)` + format; test-first (valid forms + invalid → exit 2), keep 100% coverage | `wirekit.py`, `tests/test_wirekit.py` |
 
 > **Granularity rule:** "Exact Next Action" means the precise command, function name, or
 > file — not "working on auth." A new session must be able to pick up from this without

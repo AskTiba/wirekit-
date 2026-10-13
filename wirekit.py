@@ -11,6 +11,7 @@ Usage:
 
 import argparse
 import ipaddress
+import json
 import random
 
 
@@ -146,8 +147,12 @@ def main():
         default=None,
         help="prefix (/24), integer (24), or dotted mask (255.255.255.0)",
     )
-    parser.add_argument("--bits", action="store_true", help="show binary IP AND mask")
-    parser.add_argument(
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--bits", action="store_true", help="show binary IP AND mask")
+    mode.add_argument(
+        "--json", action="store_true", help="machine-readable JSON output"
+    )
+    mode.add_argument(
         "--quiz", action="store_true", help="interactive subnetting practice"
     )
     args = parser.parse_args()
@@ -166,6 +171,9 @@ def main():
         parser.error(str(exc))
 
     rows = analyze(net)
+    if args.json:
+        print(json.dumps(dict(rows)))
+        return
     width = max(len(key) for key, _ in rows)
     for key, value in rows:
         print(f"{key:<{width}} = {value}")

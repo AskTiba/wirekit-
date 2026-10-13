@@ -1,3 +1,4 @@
+import json
 import pathlib
 import random
 import subprocess
@@ -248,3 +249,26 @@ def test_main_invalid_ip_errors(monkeypatch, capsys):
         wirekit.main()
     assert excinfo.value.code == 2
     assert "error" in capsys.readouterr().err.lower()
+
+
+def test_main_json_mode_emits_same_data_as_table(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "--json", "192.168.1.26", "/24"])
+    wirekit.main()
+    data = json.loads(capsys.readouterr().out)
+    assert data["Network"] == "192.168.1.0"
+    assert data["Netmask"] == "255.255.255.0"
+    assert data["CIDR"] == "/24"
+    assert data["Broadcast"] == "192.168.1.255"
+    assert data["HostMin"] == "192.168.1.1"
+    assert data["HostMax"] == "192.168.1.254"
+    assert data["Hosts/Net"] == "254"
+    assert data["Total IPs"] == "256"
+    assert data["Next network"] == "192.168.2.0"
+
+
+def test_main_json_and_bits_are_mutually_exclusive(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["wirekit", "--json", "--bits", "10.0.0.1", "/8"])
+    with pytest.raises(SystemExit) as excinfo:
+        wirekit.main()
+    assert excinfo.value.code == 2
+    assert "not allowed with" in capsys.readouterr().err

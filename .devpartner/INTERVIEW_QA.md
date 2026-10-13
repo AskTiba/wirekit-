@@ -84,6 +84,22 @@
 
 ---
 
+### STORY-001 — `--json` output mode — 2026-10-13
+
+**Q (T1):** Why keep the human keys (`"Hosts/Net"`, `"Next network"`) in JSON instead of `snake_case` machine keys?
+
+**A:** One data source, two renderings — `analyze()` returns rows, text mode formats them, JSON mode `dict(rows)` + `json.dumps`. Mapping to `snake_case` would add a second schema to invent, test, and keep in sync; drift risk with zero user benefit since `jq` handles any key (`.["Hosts/Net"]`). Values stay strings for the same reason: honest 1:1 mirror of the table; callers can `tonumber` if they need ints. Tradeoff accepted and documented — if a real consumer ever needs typed/aliased output, that's a versioned schema change, not a silent rename.
+
+**Q (T1):** `--json --bits` errors with "not allowed with" — why not just ignore `--bits`?
+
+**A:** Silent ignoring is how scriptable CLIs rot: a user's pipe gets half-JSON half-binary-dump and the bug surfaces three steps downstream with no attribution. `add_mutually_exclusive_group()` turns it into exit code 2 with a clear stderr message at parse time — same failure style as every other CLI error (consistent exit-code contract). Also tightened `--quiz` into the same group: one mode per invocation.
+
+**Q (T1):** Implementation detail: why is `json` importable in stdlib relevant here?
+
+**A:** Project rule ADR-002: runtime stays stdlib-only — any new *runtime* dependency needs a DECISIONS entry. `json` is stdlib, so zero governance overhead and zero supply-chain surface; the flag is ~4 lines (`if args.json: print(json.dumps(dict(rows))); return`). Interview signal: knowing which batteries are included (`json`, `argparse`, `ipaddress`) is table stakes; the judgment is in the output contract, not the import.
+
+---
+
 ## Project Scan (Post-Hoc) — 2026-10-13
 
 ### D1. System Design & Architecture
