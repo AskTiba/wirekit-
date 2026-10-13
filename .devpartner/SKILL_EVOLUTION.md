@@ -64,5 +64,5 @@
 |---|---|---|---|
 | CI scope: full-shape scaled (no ruff yet) | Yes | 2026-10-13 | [DECISIONS.md](DECISIONS.md) ADR-001 |
 | Zero runtime dependencies | Yes | 2026-10-13 | [DECISIONS.md](DECISIONS.md) ADR-002 |
-| pytest as test runner, pinned 9.0.2 | Yes | 2026-10-13 | [DECISIONS.md](DECISIONS.md) TECH-001 |
+| pytest as test runner, pinned 9.0.3 (vuln bump from 9.0.2, PYSEC-2026-1845) | Yes | 2026-10-13 | [DECISIONS.md](DECISIONS.md) TECH-001 |
 | Python support claim = 3.11–3.14 (CI matrix is the source of truth) | Yes | 2026-10-13 | [ROADMAP.md](ROADMAP.md) NFR |
